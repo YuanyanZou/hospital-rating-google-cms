@@ -1,0 +1,33 @@
+# Local environments and caches
+.DS_Store
+.ipynb_checkpoints/
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+
+# Credentials and local config
+.env
+*.key
+*token*
+*secret*
+*credential*
+
+# Raw or row-level data are intentionally excluded from the public repo
+*.csv
+*.tsv
+*.xlsx
+*.xls
+*.json
+*.jsonl
+*.parquet
+*.pkl
+*.pickle
+*.joblib
+
+# Interactive maps generated from real row-level data are excluded
+*.html
+
+# Allow public aggregate markdown tables
+!outputs/tables/*.md
