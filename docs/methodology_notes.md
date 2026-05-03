@@ -25,8 +25,12 @@ Key feature decisions:
 - Google review count was log-transformed because the original distribution was strongly right-skewed.
 - Google review count, SVI, and Gini were standardized to z-scores for comparability across models.
 - Google and CMS measures were converted to empirical percentile ranks for gap outcomes because the original rating systems use different scales and distributions; the gap is interpreted as a relative standing difference, not a raw score difference.
-- Academic medical centers were identified using CMS Provider of Services resident physician count and medical school affiliation fields.
-- The Kaiser indicator captures a structurally distinct integrated HMO system in California, where CMS clinical reporting patterns differ from many non-Kaiser hospitals. This variable is interpreted as a descriptive institutional subgroup marker rather than a causal estimate of HMO integration.
+
+**Kaiser / integrated HMO hospitals**  
+23 of 30 Kaiser hospitals had structurally missing CMS clinical scores. This missingness was treated as MNAR rather than random: Kaiser's integrated HMO model means most facilities do not meet CMS reporting thresholds by design, not because data was unavailable. Listwise deletion would have removed 12.6% of the sample and systematically excluded this institutional type. All 30 Kaiser hospitals were retained with a binary indicator flag.
+
+**Academic Medical Center indicator**  
+The AMC indicator emerged mid-analysis: Kaiser's gap pattern prompted a closer look at other institutionally distinct hospital types, and UC system hospitals had been noticeably difficult to resolve during fuzzy matching — suggesting a structurally different naming and reporting pattern. AMCs were defined using dual criteria from the CMS Provider of Services file: resident physician count > 200 and medical school affiliation code = 1, validated against Definitive Healthcare's California AMC reference list (n=15 matched exactly).
 
 ## Models
 

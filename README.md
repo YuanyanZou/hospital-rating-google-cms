@@ -1,45 +1,48 @@
 # Divergence Between Google Maps Reviews and CMS Hospital Ratings in California
 
-This repository is a portfolio-focused reconstruction of a UC Davis STA 220 group project examining whether Google Maps hospital star ratings align with official CMS hospital quality measures in California.
+| | |
+|---|---|
+| **Domain** | Healthcare analytics, public ratings |
+| **Sample** | 239 California hospitals, 42 counties |
+| **Methods** | Fuzzy entity matching, county-clustered OLS, nonparametric tests |
+| **Stack** | Python · pandas · RapidFuzz · statsmodels · scikit-learn · folium|
+| **Data sources** | Google Places API · CMS Hospital Compare · AHRQ SDOH · CMS POS File |
+| **My role** | Entity resolution, preprocessing, statistical modeling, technical writing |
 
-The public version highlights the components I independently implemented and can fully explain: fuzzy entity matching, final dataset merge, preprocessing and EDA, OLS modeling, and sensitivity analysis.
+Google hospital ratings are widely used but rarely validated against clinical quality measures. This repository is a portfolio-focused reconstruction of a UC Davis STA 220 group project examining whether Google Maps hospital ratings align with official CMS hospital quality measures among California hospitals.
 
-Raw API-derived data and some collaborative notebooks are not included because of data-sharing constraints and contribution-boundary considerations. This repository is intended to demonstrate the analytical workflow and selected aggregate outputs, not to provide full raw-data reproducibility.
+The final analytic sample included 239 California hospitals across 42 counties. The public version focuses on the analytical workflow I owned end-to-end: fuzzy entity matching, dataset merge, preprocessing and EDA, county-clustered OLS modeling, sensitivity analysis, and sanitized public visualization.
 
-## Project Snapshot
+Raw Google API-derived records, row-level merged datasets, and teammate-authored notebooks are excluded from this public repository.
 
-- **Domain:** Healthcare analytics, public ratings, hospital quality measurement
-- **Sample:** 239 California hospitals after analytic exclusions
-- **Data sources:** Google Places API, CMS Hospital Compare, AHRQ SDOH Database, CMS Provider of Services File
-- **Methods:** Entity resolution, fuzzy matching, feature engineering, nonparametric tests, county-clustered OLS, sensitivity analysis
-- **Public-data boundary:** No raw Google API outputs or row-level merged analytic data are included
+## My Contributions
 
-## My Contribution
+This project was originally completed as a three-person UC Davis STA 220 course project. I owned the following components:
 
-This project was originally developed in a three-person team. My primary contributions were:
+- **Entity resolution:** Built the initial Google Places API demo, built the ZIP3-constrained fuzzy matching pipeline (RapidFuzz) linking 250 CMS hospital records to Google Places entries, including geographic validation and a targeted re-query for incomplete Southern California coverage.
+- **Statistical modeling**: Specified and estimated five county-clustered OLS models; conducted Spearman/Wilcoxon tests and two sensitivity analyses (Kaiser exclusion, Cook's distance).
+- **Preprocessing**: Handled Kaiser clinical-score missingness as an MNAR institutional pattern; constructed AMC indicator; constructed percentile-rank gap outcomes. 
+- **Technical writing:** rewrote the methodology, results, and discussion sections to correct statistical interpretation issues and align the final report with the actual analysis.
 
-- Designed and implemented the fuzzy entity matching pipeline using ZIP3-constrained candidate generation, RapidFuzz scoring, and ZIP5 geographic validation.
-- Diagnosed the Southern California matching gap as an upstream Google Places API pagination/completeness issue rather than a fuzzy matching failure.
-- Built the final analytic dataset merge and preprocessing workflow.
-- Constructed key modeling variables, including Kaiser and academic medical center indicators, percentile-rank gap outcomes, and standardized SDOH covariates.
-- Implemented Spearman correlation analysis, Wilcoxon signed-rank test, county-clustered OLS models, and Kaiser/Cook's-distance sensitivity analyses.
-- Produced most statistical figures and revised the methodology/results sections for consistency.
-
-Collaborative components not included in this public reconstruction include the original Google API collection notebooks and the original teammate-authored interactive folium map.
+Collaborative components not included in this public reconstruction include the original Google API collection notebooks.
 
 ## Key Findings
 
-The result wording below follows the final project report and is intentionally descriptive rather than causal.
+- **Google ratings are not a reliable proxy for clinical quality.**  
+  Google star ratings show weak alignment with CMS clinical quality scores, even though they are somewhat more aligned with CMS patient experience. This suggests that online ratings should not be used alone for clinical-quality interpretation.
 
-- Google ratings were only weakly associated with CMS clinical outcome scores (Spearman rho = 0.091), while showing modest association with CMS patient experience scores (rho = 0.246).
-- Google and CMS overall star ratings differed systematically in the matched sample (mean difference = 0.49 stars; Wilcoxon signed-rank p < 0.0001).
-- Standardized log Google review count was strongly associated with Google ratings and all three Google-minus-CMS percentile gap outcomes, while it was not statistically associated with CMS overall stars.
-- Social vulnerability was negatively associated with both Google and CMS ratings, but it was not significantly associated with the gap outcomes.
-- Institutional subgroup markers were associated with different patterns of divergence, especially in the clinical gap model.
+- **Review volume behaves like a platform visibility signal.**  
+  Hospitals with more Google reviews tend to rank higher on Google relative to CMS measures, while review count is not meaningfully associated with CMS overall stars. For analytics teams, this means review volume should be treated as a potential platform-exposure factor, not just a popularity metric.
 
-The Kaiser indicator captures a structurally distinct integrated HMO system in California, where CMS clinical reporting patterns differ from many non-Kaiser hospitals. This variable is interpreted as a descriptive institutional subgroup marker rather than a causal estimate of HMO integration.
+- **Institutional subgroup patterns matter.**  
+  Kaiser / integrated HMO hospitals and academic medical centers show different Google–CMS divergence patterns. This suggests that hospital type should be accounted for when comparing public-facing reputation with official quality metrics.
 
-## Selected Aggregate Outputs
+- **County-level vulnerability affects both systems, but does not explain the gap.**  
+  Social vulnerability is negatively associated with both Google and CMS ratings, but it does not significantly widen the Google–CMS percentile gap. In this dataset, divergence is more closely associated with review volume and institutional subgroup patterns than with county-level SDOH alone.
+
+Overall, online ratings appear to capture public-facing experience and visibility more than clinical quality. 
+
+## Selected Public Outputs
 
 Displayed outputs are aggregate or sanitized public artifacts; row-level hospital records and API-derived records are excluded from this repository.
 
@@ -47,35 +50,43 @@ Displayed outputs are aggregate or sanitized public artifacts; row-level hospita
 
 ![Rating distributions](outputs/figures/01_rating_distributions.png)
 
+Four rating variables plotted separately. Scales and distributions differ across systems, motivating percentile-rank gap outcomes rather than raw-score comparison. 
+
 ### Spearman Correlation Heatmap
 
 ![Spearman correlation heatmap](outputs/figures/02_spearman_correlation_heatmap.png)
 
-### Review Count Coefficients
+Spearman rank correlations between Google and CMS measures. Google star ratings show weak alignment with CMS clinical quality scores (ρ = 0.09).
 
-![Review count coefficients](outputs/figures/05_review_count_coefficients.png)
+### Google vs. CMS Clinical Percentile Gap Bubble Plot
 
-### Institutional Subgroup Coefficients
+![Google vs. CMS clinical rank bubble](outputs/figures/04_google_cms_clinical_rank_bubble.png)
 
-![Institutional subgroup coefficients](outputs/figures/08_institutional_subgroup_coefficients.png)
+Each point is one hospital. Points above the diagonal rank higher on Google than on CMS clinical quality. Bubble size reflects Google review count; color indicates institutional subgroup. 
 
-### Statewide Map Overview
+### Coefficient Forest Plot
 
-This small static image is included only as a coarse geographic overview. It intentionally excludes labels, tooltips, tables, and readable hospital-level details.
+![Coefficient Forest Plot](outputs/figures/08_institutional_subgroup_coefficients.png)
 
-![Tiny California hospital distribution overview](outputs/maps/california_hospital_distribution_overview_tiny.png)
+Coefficient estimates (95% CI) for Kaiser and Academic Medical Center indicators across five models. Both institutional types receive higher CMS overall stars, but diverge in gap-model direction.
+
+### Redacted Interactive Map Preview
+
+![Redacted Folium map preview](outputs/maps/folium_interactive_popup_redacted_preview.png)
+
+Interactive map showing hospital locations across California. Popup fields and hospital identifiers are redacted in this public preview screenshot.
 
 ## Repository Structure
 
 ```text
 .
 ├── README.md
-├── AGENTS.md
 ├── notebooks/
 │   ├── 02_fuzzy_matching.ipynb
 │   ├── 04_dataset_merge.ipynb
 │   ├── 05_preprocessing_eda.ipynb
-│   └── 06_ols_modeling_sensitivity.ipynb
+│   ├── 06_ols_modeling_sensitivity.ipynb
+│   └── 07_interactive_map.ipynb
 ├── outputs/
 │   ├── figures/
 │   ├── tables/
@@ -95,6 +106,7 @@ This small static image is included only as a coarse geographic overview. It int
 | `04_dataset_merge.ipynb` | Final merge across Google-derived records, CMS quality files, AHRQ county SDOH indicators, and CMS POS teaching variables. |
 | `05_preprocessing_eda.ipynb` | Exclusions, missing-data handling, Kaiser and academic flags, percentile ranks, nonparametric tests, and aggregate EDA figures. |
 | `06_ols_modeling_sensitivity.ipynb` | County-clustered OLS models, coefficient plots, diagnostics, Kaiser exclusion sensitivity, and Cook's-distance sensitivity. |
+| `07_interactive_map.ipynb` | Folium-based interactive map workflow. The row-level dataset and generated HTML map are excluded from the public repository. |
 
 The notebooks are sanitized copies intended for workflow review. Outputs are cleared because row-level source data are excluded from the public repository.
 
@@ -114,4 +126,4 @@ The code is provided for portfolio review and methodological transparency. Repro
 
 ## Tools
 
-Python, pandas, NumPy, RapidFuzz, statsmodels, scipy, scikit-learn, matplotlib, seaborn.
+Python, pandas, NumPy, RapidFuzz, statsmodels, scipy, scikit-learn, matplotlib, seaborn, folium.
