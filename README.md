@@ -93,7 +93,7 @@ Interactive Folium map of hospital locations across California. Popup fields are
 
 ## My Contributions
 
-This project was completed by a three-person team for UC Davis STA 221. This public version focuses on the analytical workflow I owned end-to-end: 
+This project was completed by a three-person team for UC Davis STA 220. This public version focuses on the analytical workflow I owned end-to-end: 
 
 - **Entity resolution:** Built the Google Places API querying demo and the ZIP3-constrained fuzzy matching pipeline (RapidFuzz) linking 250 CMS hospital records to Google Places entries, including geographic validation and a targeted re-query for incomplete Southern California coverage.
 - **Statistical modeling**: Specified and estimated five county-clustered OLS models; conducted Spearman/Wilcoxon tests and two sensitivity analyses (Kaiser exclusion, Cook's distance).
